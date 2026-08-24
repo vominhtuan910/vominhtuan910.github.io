@@ -1,0 +1,39 @@
+baseURL: "https://vominhtuan910.github.io/"
+defaultContentLanguage: "en"
+languages:
+  en:
+    locale: "en-US"
+title: "SecNotes | Vo Minh Tuan"
+theme: "PaperMod"
+
+params:
+  env: "production"
+  title: "SecNotes"
+  description: "Cybersecurity, CTF Writeups & Security Research"
+  author: "Vo Minh Tuan"
+
+  defaultTheme: "dark" # Giao diện mặc định: dark hoặc auto
+  ShowReadingTime: true
+  ShowShareButtons: false
+  ShowCodeCopyButtons: true # Nút copy code snippet cực tiện
+
+  homeInfoParams:
+    Title: "Hi, I'm Vo Minh Tuan 👋"
+    Content: "Welcome to my security blog. Sharing CTF writeups, Pentest methodology, and security research."
+
+  socialIcons:
+    - name: "github"
+      url: "https://github.com/vominhtuan910"
+    - name: "linkedin"
+      url: "https://linkedin.com/in/vominhtuan910"
+
+menu:
+  main:
+    - identifier: posts
+      name: Posts
+      url: /posts/
+      weight: 10
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 20
