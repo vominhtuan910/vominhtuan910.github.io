@@ -1,0 +1,13 @@
+.post-content img {
+    max-width: 100%;
+    /* Co giãn theo khung bài viết, không bao giờ bị tràn viền */
+    height: auto;
+    /* Giữ đúng tỷ lệ ảnh gốc */
+    border: 1px solid #3b3d42;
+    /* Ôm sát viền ngoài của mọi kích thước ảnh */
+    border-radius: 6px;
+    /* Bo nhẹ 4 góc */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    /* Đổ bóng tách nền tối */
+    margin: 1.2rem auto
+}

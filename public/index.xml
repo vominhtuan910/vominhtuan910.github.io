@@ -6,6 +6,49 @@
     <description>Recent content on SecNotes | Vo Minh Tuan</description>
     <generator>Hugo</generator>
     <language>en-US</language>
+    <lastBuildDate>Mon, 24 Aug 2026 13:49:08 +0700</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reactor</title>
+      <link>http://localhost:1313/posts/hackthebox/reactor/</link>
+      <pubDate>Mon, 24 Aug 2026 13:49:08 +0700</pubDate>
+      <guid>http://localhost:1313/posts/hackthebox/reactor/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>First Pico</title>
+      <link>http://localhost:1313/posts/picoctf/first-pico/</link>
+      <pubDate>Mon, 24 Aug 2026 11:32:09 +0700</pubDate>
+      <guid>http://localhost:1313/posts/picoctf/first-pico/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Connected</title>
+      <link>http://localhost:1313/posts/hackthebox/connected/</link>
+      <pubDate>Mon, 24 Aug 2026 11:31:58 +0700</pubDate>
+      <guid>http://localhost:1313/posts/hackthebox/connected/</guid>
+      <description>&lt;h2 id=&#34;machine-summary&#34;&gt;Machine Summary&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Name:&lt;/strong&gt; Connected&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OS:&lt;/strong&gt; Linux&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Difficulty:&lt;/strong&gt; Easy&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;XP Reward:&lt;/strong&gt; 585&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Key Vulnerability:&lt;/strong&gt; CVE-2025-57819 - FreePBX Unauthenticated Remote Code Execution&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;As usual, after start the machine, I will add the target IP to my &lt;code&gt;/etc/hosts&lt;/code&gt; file for easier access. In this case, the target IP is &lt;code&gt;10.129.33.153&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;10.129.33.153 connected.htb&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/hosts
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For initial enumeration, I will use &lt;code&gt;nmap&lt;/code&gt; to scan the target machine for open ports and services:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo nmap -sC -sV -vv --open -p- -T3 connected.htb
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The scan result:
+&lt;img alt=&#34;Nmap scan result&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/posts/hackthebox/connected/nmap-result.png&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Bai Viet Thm Dau Tien</title>
+      <link>http://localhost:1313/posts/tryhackme/bai-viet-thm-dau-tien/</link>
+      <pubDate>Sun, 23 Aug 2026 18:25:53 +0700</pubDate>
+      <guid>http://localhost:1313/posts/tryhackme/bai-viet-thm-dau-tien/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>
