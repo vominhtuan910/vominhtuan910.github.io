@@ -6,28 +6,6 @@
     <description>Recent content on SecNotes | Vo Minh Tuan</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Mon, 24 Aug 2026 11:32:09 +0700</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>First Pico</title>
-      <link>http://localhost:1313/picoctf/first-pico/</link>
-      <pubDate>Mon, 24 Aug 2026 11:32:09 +0700</pubDate>
-      <guid>http://localhost:1313/picoctf/first-pico/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>First Htb</title>
-      <link>http://localhost:1313/hackthebox/first-htb/</link>
-      <pubDate>Mon, 24 Aug 2026 11:31:58 +0700</pubDate>
-      <guid>http://localhost:1313/hackthebox/first-htb/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Bai Viet Thm Dau Tien</title>
-      <link>http://localhost:1313/tryhackme/bai-viet-thm-dau-tien/</link>
-      <pubDate>Sun, 23 Aug 2026 18:25:53 +0700</pubDate>
-      <guid>http://localhost:1313/tryhackme/bai-viet-thm-dau-tien/</guid>
-      <description></description>
-    </item>
   </channel>
 </rss>
