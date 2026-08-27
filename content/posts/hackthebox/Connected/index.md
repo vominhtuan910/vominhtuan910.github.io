@@ -1,8 +1,9 @@
 ---
 date: "2026-08-24T11:31:58+07:00"
 draft: false
-title: "Connected walkthrough"
+title: "HackTheBox - Connected walkthrough"
 tags: ["HackTheBox", "Asterisks", "FreePBX", "Privilege Escalation", "Linux"]
+summary: "Walkthrough for Connected machine on HackTheBox"
 ---
 
 ## Machine Summary
