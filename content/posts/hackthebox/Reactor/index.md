@@ -22,3 +22,5 @@ After starting the machine, add the IP to the `/etc/hosts` for easier access:
 ```bash
 echo "<MACHINE-IP> reactor.htb" | sudo tee -a /etc/hosts
 ```
+
+For initial enumeration
