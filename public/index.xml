@@ -16,25 +16,11 @@
       <description>Walkthrough for Connected machine on HackTheBox</description>
     </item>
     <item>
-      <title>First Pico</title>
-      <link>http://localhost:1313/posts/picoctf/first-pico/</link>
-      <pubDate>Mon, 24 Aug 2026 11:32:09 +0700</pubDate>
-      <guid>http://localhost:1313/posts/picoctf/first-pico/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>HackTheBox - Connected walkthrough</title>
       <link>http://localhost:1313/posts/hackthebox/connected/</link>
       <pubDate>Mon, 24 Aug 2026 11:31:58 +0700</pubDate>
       <guid>http://localhost:1313/posts/hackthebox/connected/</guid>
       <description>Walkthrough for Connected machine on HackTheBox</description>
-    </item>
-    <item>
-      <title>Bai Viet Thm Dau Tien</title>
-      <link>http://localhost:1313/posts/tryhackme/bai-viet-thm-dau-tien/</link>
-      <pubDate>Sun, 23 Aug 2026 18:25:53 +0700</pubDate>
-      <guid>http://localhost:1313/posts/tryhackme/bai-viet-thm-dau-tien/</guid>
-      <description></description>
     </item>
   </channel>
 </rss>

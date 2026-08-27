@@ -17,6 +17,12 @@ params:
   ShowShareButtons: false
   ShowCodeCopyButtons: true # Nút copy code snippet cực tiện
 
+  assets:
+    favicon: "favicon.ico"
+    favicon16x16: "favicon-16x16.png"
+    favicon32x32: "favicon-32x32.png"
+    apple_touch_icon: "apple-touch-icon.png"
+
   homeInfoParams:
     Title: "Hi, I'm Vo Minh Tuan 👋"
     Content: "Welcome to my security blog. Sharing CTF writeups, Pentest methodology, and security research."
