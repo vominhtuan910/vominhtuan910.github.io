@@ -9,5 +9,9 @@
     /* Bo nhẹ 4 góc */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
     /* Đổ bóng tách nền tối */
-    margin: 1.2rem auto
+}
+
+:root {
+    --main-width: 800px;
+    /* Mặc định là 720px */
 }

@@ -228,7 +228,7 @@ echo "trigger" > /usr/local/asterisk/ha_trigger
 
 Wait few seconds, then check the `/tmp/rootbash` file, it has SUID bit set and owned by root. Now we can execute `/tmp/rootbash -p` to get a root shell:
 
-[![Root shell](rootbash.png)
+![Root shell](rootbash.png)
 
 Finally, we can read the root flag in the `/root` directory:
 
