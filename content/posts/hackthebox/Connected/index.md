@@ -17,7 +17,7 @@ summary: "Walkthrough for Connected machine on HackTheBox"
 
 ---
 
-As usual, after start the machine, I will add the target IP to my `/etc/hosts` file for easier access. In this case, the target IP is `10.129.33.153`:
+As usual, after starting the machine, I will add the target IP to my `/etc/hosts` file for easier access. In this case, the target IP is `10.129.33.153`:
 
 ```bash
 echo "10.129.33.153 connected.htb" | sudo tee -a /etc/hosts
@@ -34,7 +34,7 @@ The scan result:
 
 We see that it has 3 open ports:
 
-- Port 22 (SSH): for remote access to the machine, using OpenSSH 7.4
+- Port 22 (SSH): for remote access to the machine, use OpenSSH 7.4
 - Port 80 (HTTP): use Apache 2.4.6 with PHP 7.4.16
 - Port 443 (HTTPS): like port 80 but with SSL enabled
 
@@ -152,7 +152,7 @@ find / -perm -4000 2>/dev/null
 
 Lots of SUID binaries, first I think about `crontab` because it appears on [GTFOBins](https://gtfobins.github.io/gtfobins/crontab/) can open vim editor as root. I try to run `/usr/bin/crontab -e` and type `:!/bin/sh` but it just open a new shell as `asterisk` user, not root. Maybe it has checked the user permission before executing the command.
 
-After researching around Internet more about the CVE-2025-57819, I found this [GitHub repository](https://github.com/YuvrajSHAD/FreePBX-CVE-2025-57819) has tell about the `incron` service as the post-exploitation vector. The `incron` service is a daemon that monitors filesystem events and executes commands based on those events. Since `incrontab` has the SUID bit set, maybe we can use it to escalate our privileges.
+After researching around Internet more about the CVE-2025-57819, I found this [GitHub repository](https://github.com/YuvrajSHAD/FreePBX-CVE-2025-57819) mentions the `incron` service as the post-exploitation vector. The `incron` service is a daemon that monitors filesystem events and executes commands based on those events. Since `incrontab` has the SUID bit set, maybe we can use it to escalate our privileges.
 
 ![Incron service](incrontab-suid.png)
 
@@ -218,7 +218,7 @@ class incron {
 ?>
 ```
 
-In this case, I just copy the `/bin/bash` to `/tmp/rootbash` and set the SUID bit on it, so when we execute `/tmp/rootbash`, it will has euid of root. If you want, you can create a reverse shell, modify sudoers file, or add a new user to the system, etc. The choice is yours :D.
+In this case, I just copy the `/bin/bash` to `/tmp/rootbash` and set the SUID bit on it, so when we execute `/tmp/rootbash`, it will have euid of root. If you want, you can create a reverse shell, modify sudoers file, or add a new user to the system, etc. The choice is yours :D.
 
 Finally, i will trigger the event `IN_CLOSE_WRITE` on the watched file `/usr/local/asterisk/ha_trigger` to execute the command as root. `IN_CLOSE_WRITE` event is triggered when a file is closed after being opened for writing. So, I will use `echo` command to write something to the watched file and then close it:
 
@@ -226,7 +226,7 @@ Finally, i will trigger the event `IN_CLOSE_WRITE` on the watched file `/usr/loc
 echo "trigger" > /usr/local/asterisk/ha_trigger
 ```
 
-Wait few seconds, then check the `/tmp/rootbash` file, it has SUID bit set and owned by root. Now we can execute `/tmp/rootbash -p` to get a root shell:
+Wait a few seconds, then check the `/tmp/rootbash` file, it has SUID bit set and owned by root. Now we can execute `/tmp/rootbash -p` to get a root shell:
 
 ![Root shell](rootbash.png)
 
