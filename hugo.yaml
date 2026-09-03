@@ -3,14 +3,14 @@ defaultContentLanguage: "en"
 languages:
   en:
     locale: "en-US"
-title: "SecNotes | Vo Minh Tuan"
+title: "SecNotes | twthunter"
 theme: "PaperMod"
 
 params:
   env: "production"
   title: "SecNotes"
   description: "Cybersecurity, CTF Writeups & Security Research"
-  author: "Vo Minh Tuan"
+  author: "twthunter"
 
   defaultTheme: "dark" # Giao diện mặc định: dark hoặc auto
   ShowReadingTime: true
@@ -24,8 +24,8 @@ params:
     apple_touch_icon: "apple-touch-icon.png"
 
   homeInfoParams:
-    Title: "Hi, I'm Vo Minh Tuan 👋"
-    Content: "Welcome to my security blog. Sharing CTF writeups, Pentest methodology, and security research."
+    Title: "Hi, I'm Vo Minh Tuan - a cybersecurity student with high passion for security 👋"
+    Content: "Welcome to my blog. Sharing CTF writeups, Pentest methodology, and security research."
 
   socialIcons:
     - name: "github"
