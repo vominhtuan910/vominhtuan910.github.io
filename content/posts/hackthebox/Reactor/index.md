@@ -42,7 +42,7 @@ We have 2 open ports, one run SSH and one run `ppp?` service ???:
 A little bit confusing with `ppp` service but if we look at the fingerprint-strings of the Nmap output, we can see that actually a website with `http` service. Access the website:
 ![website](./pics/website.png)
 
-Using [Wappalyzer](https://www.wappalyzer.com/), we know that it run on Next.js and React Native
+Using [Wappalyzer](https://www.wappalyzer.com/), we know that it runs on Next.js and React:
 ![Wappalyzer](./pics/wappalyzer.png)
 
 Try to find the vulnerabilities related to that Next.js version and I found this [article](https://www.oligo.security/blog/critical-react-next-js-rce-vulnerability-cve-2025-55182-cve-2025-66478-what-you-need-to-know). Bingooo! We have one of the biggest and most widespread security exploits in 2025: **`React2Shell`**. Reading the article and we can confirm that our target is vulnerable to that:
@@ -82,7 +82,7 @@ Because the vulnerable code runs on the server, successful exploitation results 
 
 ---
 
-Continue with our machine, I use `Metasploit Framework` to exploit:
+Continue with our machine, I use `Metasploit Framework` to automate the exploit:
 
 ```bash
 msfconsole
@@ -91,7 +91,7 @@ search react2shell
 
 ![metasploit-search](./pics/msfsearch.png)
 
-We know that the machine run Ubuntu through `nmap` scan so we `use 1` to choose module 1. Type `options` to see module options, here we set the options:
+We know that the machine runs Ubuntu through `nmap` scan so we `use 1` to choose module 1. Type `options` to see module options, here we set the options:
 
 ```
 set rhosts reactor.htb
@@ -124,14 +124,14 @@ sqlite3 reactor.db
 The `users` table contains two sets of credentials: `admin` and `engineer`:
 ![gethash](./pics/dbhash.png)
 
-Using [CrackStation](https://crackstation.net/), only the `engineer` hash was successfully cracked, while the `admin` hash yielded no results. Now we have full credential of `engineer` user, use it to log in via SSH for more stable shell.
+Using [CrackStation](https://crackstation.net/), only the `engineer` hash was successfully cracked, while the `admin` hash yielded no results. The target has Now we have full credential of `engineer` user, use it to log in via SSH for persistent session.
 
 Here, we can get the user flag:
 ![user-flag](./pics/user-flag.png)
 
 ## Privilege Escalation
 
-Basic enumeration on SUID binaries, Linux capabilities, and cron jobs yielded no exploitable vectors. I look for open ports on machine and see an interesting port `9929` running locally. After research, I know that is the default port used by `Node.js` for its remote debugging inspector: <https://nodejs.org/learn/getting-started/debugging>.
+Basic enumeration on SUID binaries, Linux capabilities, and cron jobs yielded no exploitable vectors. I look for open ports on machine and see an interesting port `9229` running locally. After research, I know that is the default port used by `Node.js` for its remote debugging inspector: <https://nodejs.org/learn/getting-started/debugging>.
 
 ![ss](./pics/ss.png)
 
@@ -223,9 +223,9 @@ probe();
 console.log("uptime-monitor up, pid=" + process.pid);
 ```
 
-It's just a clean script for auto logging uptime detail of website into `/var/log/uptime-monitor.csv`, nothing can be exploited here. From my past CTF experience and research, the `--inspect` switch appears to be the most promising vulnerability to target in this box. This [article](https://hacktricks.wiki/en/linux-hardening/software-information/electron-cef-chromium-debugger-abuse.html) has introduced quite detaily about the exploitation.
+It's just a clean script for auto logging uptime detail of website into `/var/log/uptime-monitor.csv`, nothing can be exploited here. From my past CTF experience and research, the `--inspect` switch appears to be the most potential target. The Node.js Inspector was exposed on a localhost-only port while the target process was running as root, because an unprivileged user could access this debugging interface, it became a viable privilege-escalation vector. This [article](https://hacktricks.wiki/en/linux-hardening/software-information/electron-cef-chromium-debugger-abuse.html) has introduced quite detaily about the exploitation.
 
-Checking Inspector, it run `Node.js` version 20.20.2 and [CDP](https://chromedevtools.github.io/devtools-protocol/) version 1.1:
+Checking Inspector, it runs `Node.js` version 20.20.2 and [CDP](https://chromedevtools.github.io/devtools-protocol/) version 1.1:
 
 ```bash
 curl http://127.0.0.1:9229/json/version | jq
@@ -251,7 +251,7 @@ Next, we need to connect to Node.js Inspector using the value of `webSocketDebug
 
 Node.js Inspector exposes several debugging capabilities through CDP. One of the most interesting methods for this attack is: `Runtime.evaluate`. This method allows JavaScript expressions to be evaluated inside the runtime of the target Node.js process. Once arbitrary JavaScript can be evaluated inside this process, Node.js APIs can be abused to interact with the underlying operating system, resulting in command execution with root privileges.
 
-I write a Python script to connect to Inspector, use `Runtime.evalute` method to execute our payload:
+I write a Python script to connect to Inspector, use `Runtime.evalute` method to execute our payload. The target do not have the `websocket` library installed, and `pipx` is not available. Therefore, I implement the WebSocket framing logic manually, using a raw TCP socket to perform the handshake, mask frames, and send them to the Node.js Inspector. The script is as follows:
 
 ```python
 import base64
@@ -328,7 +328,7 @@ s.sendall(header + mask_key + masked_data)
 res_raw = s.recv(8192)
 s.close()
 
-# Parse respone from server
+# Parse response from server
 if len(res_raw) > 2:
     payload_len = res_raw[1] & 0x7F
     offset = 2
