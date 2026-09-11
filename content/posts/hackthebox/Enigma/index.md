@@ -1,5 +1,5 @@
 ---
-date: "2024-08-26"
+date: "2026-08-26"
 draft: false
 title: "HackTheBox - Enigma walkthrough"
 tags:
@@ -223,7 +223,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt haris.txt
 Next, we use the password to login as `haris` and get the user flag:
 
 ```bash
-su -u haris
+su - haris
 pwd
 ls -la
 cat user.txt
