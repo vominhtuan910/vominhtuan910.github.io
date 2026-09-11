@@ -1,6 +1,6 @@
 ---
 date: "2024-08-26"
-draft: true
+draft: false
 title: "HackTheBox - Enigma walkthrough"
 tags:
   ["HackTheBox", "Privilege Escalation", "Linux", "OliveTin", "OpenSTAManager"]
