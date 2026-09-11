@@ -24,7 +24,7 @@ params:
     apple_touch_icon: "apple-touch-icon.png"
 
   homeInfoParams:
-    Title: "Hi, I'm Vo Minh Tuan - a cybersecurity student with high passion for security 👋"
+    Title: "Hi, I'm a cybersecurity student with high passion for hacking 👋"
     Content: "Welcome to my blog. Sharing CTF writeups, Pentest methodology, and security research."
 
   socialIcons:

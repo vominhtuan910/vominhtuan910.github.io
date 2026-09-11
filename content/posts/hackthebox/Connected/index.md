@@ -119,6 +119,8 @@ Wait for a while, and we will get a reverse shell as the `asterisk` user:
 Here we can get the user flag in the home directory of `asterisk`:
 ![User flag](user-flag.png)
 
+## Privilege Escalation
+
 I check the `/etc/passwd` file and see that user `asterisk` has directory at `/home` so we can create a clone SSH key pair and add the public key to the `~/.ssh/authorized_keys` file of `asterisk` user. Then we can use the private key to login as `asterisk` user via SSH and have a more stable shell. I will use `ssh-keygen` to generate a new key pair and then copy the public key to the target machine:
 
 ```bash
@@ -233,12 +235,3 @@ Wait a few seconds, then check the `/tmp/rootbash` file, it has SUID bit set and
 Finally, we can read the root flag in the `/root` directory:
 
 ![Root flag](root-flag.png)
-
----
-
-## References
-
-- <https://nvd.nist.gov/vuln/detail/cve-2025-57819>
-- <https://www.penligent.ai/hackinglabs/cve-2025-57819>
-- <https://github.com/K3ysTr0K3R/CVE-2025-57819>
-- <https://github.com/YuvrajSHAD/FreePBX-CVE-2025-57819>
