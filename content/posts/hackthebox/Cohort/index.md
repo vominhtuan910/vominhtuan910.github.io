@@ -1,5 +1,5 @@
 ---
-date: "2026-08-24T11:31:58+07:00"
+date: "2026-09-15T11:31:58+07:00"
 draft: false
 title: "HackTheBox - Cohort walkthrough"
 tags: ["HackTheBox", "Marimo", "Privilege Escalation", "Linux", "SSRF"]
@@ -118,7 +118,7 @@ Use Burp Suite proxy to analyze the request:
 We can see that the request body contains 2 parameters `url` and `format`, send the request to Repeater and check the response:
 ![burp-response](./pics/burp-response.png)
 
-The `preview` field contains the content of the file we created on local machine, so the idea here is abusing the `url` parameter to read the internal file from the server. As the notes on website, we cannot use internal or loopback IP like "127.0.0.1" or "localhost", but we can bypass easily by using `cohort.htb` or exact IP address of the machine.
+The `preview` field contains the content of the file we created on local machine, so the idea here is abusing the `url` parameter to make the server issue requests to internal services. As the notes on website, we cannot use internal or loopback IP like "127.0.0.1" or "localhost", but we can bypass easily by using `cohort.htb` or exact IP address of the machine.
 
 The problem now is that we do not know which specific files in the server we can read, so I use `feroxbuster` to enumerate endpoints:
 
@@ -162,7 +162,7 @@ Format the data from `preview` field:
 }
 ```
 
-We have 3 internal upstreams here, the most interesting one is `notebooks` which is a Jupyter notebook server running on port 8888 and domain `nb-1be3782a8afd3ad5.cohort.htb`. Moreover, the note says "not for external use", so this is surely the endpoint we need to abuse.
+We have 3 internal upstreams here, the most interesting one is `notebooks` which is a notebook server running on port 8888 and domain `nb-1be3782a8afd3ad5.cohort.htb`. Moreover, the note says "not for external use", so this is surely the endpoint we need to abuse.
 
 Add the subdomain to `/etc/hosts` for easier access:
 
@@ -170,7 +170,7 @@ Add the subdomain to `/etc/hosts` for easier access:
 echo "<MACHINE_IP> nb-1be3782a8afd3ad5.cohort.htb" | sudo tee -a /etc/hosts
 ```
 
-Access the website, it is running on `marimo` - a Python notebook. The page just displays an input box requires password for authentication:
+Access the website, it is running on `marimo` - a Python notebook server. The page just displays an input box requires password for authentication:
 
 ![marimo-page](./pics/marimo-page.png)
 
@@ -285,22 +285,28 @@ The vulnerability occurs because **PackageKit** does not properly prevent `Insta
 **Attack Chain**:
 
 ```text
-Low-privileged Local User 
+Unprivileged User 
         ↓ 
-Create PackageKit D-Bus transaction 
+Create PackageKit transaction 
         ↓ 
-InstallFiles(ONLY_DOWNLOAD) 
+InstallFiles(SIMULATE, dummy package) 
         ↓ 
-Overwrite flags → 0 
+polkit check is bypassed 
         ↓ 
-TOCTOU race / authorization held 
+InstallFiles(NONE, malicious package) 
         ↓ 
-PackageKit performs real installation 
+Transaction flags are overwritten 
+        ↓ 
+PackageKit executes the modified transaction as root 
+        ↓ 
+Malicious .deb postinst script executes as root 
         ↓
-Malicious RPM %post scriptlet ↓ Code Execution as root
+Root shell
 ```
 
-The vulnerability affects PackageKit versions 1.0.2 through 1.3.4 and was fixed in 1.3.5.
+The exploit is not simply a timing-dependent race that requires repeatedly winning a narrow window. The two `InstallFiles()` D-Bus calls are queued asynchronously before the GLib idle callback dispatches the transaction. This allows the second call to overwrite the cached transaction flags before the installation is executed.
+
+The vulnerability affects **PackageKit** versions 1.0.2 through 1.3.4 and was fixed in 1.3.5.
 
 ---
 For more details, you can read this [advisory](https://github.com/PackageKit/PackageKit/security/advisories/GHSA-f55j-vvr9-69xv). For faster, I will use the Poc in this [repository](https://github.com/Vozec/CVE-2026-41651) to exploit the vulnerability:
