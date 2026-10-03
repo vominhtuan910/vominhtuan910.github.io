@@ -1,6 +1,6 @@
 ---
 date: "2026-08-24T11:31:58+07:00"
-draft: true
+draft: false
 title: "HackTheBox - Cohort walkthrough"
 tags: ["HackTheBox", "Marimo", "Privilege Escalation", "Linux", "SSRF"]
 summary: "Walkthrough for Cohort machine on HackTheBox"
