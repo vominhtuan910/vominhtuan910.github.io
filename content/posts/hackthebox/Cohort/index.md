@@ -97,7 +97,7 @@ I have checked the source code but nothing interesting there. On the homepage, t
 
 ![portal](./pics/portal-html.png)
 
-Reading the information on the page, we know that the the feature "Validate source" will read a file from passed URL and show the content of the file. Here, we can think of a SSRF vulnerability. I will create a `test.json` file on local machine:
+Reading the information on the page, we know that the feature "Validate source" will read a file from passed URL and show the content of the file. Here, we can think of a SSRF vulnerability. I will create a `test.json` file on local machine:
 
 ```json
 { 
@@ -174,13 +174,13 @@ Access the website, it is running on `marimo` - a Python notebook. The page just
 
 ![marimo-page](./pics/marimo-page.png)
 
-I have checked the page source, scaned for enpoints but found nothing. I check the version of `marimo` using endpoint `/api/version` and it is `0.20.4`:
+I have checked the page source, scanned for enpoints but found nothing. I check the version of `marimo` using endpoint `/api/version` and it is `0.20.4`:
 
 ```bash
 curl https://nb-1be3782a8afd3ad5.cohort.htb/api/version --insecure
 ```
 
-Search for the version on Google and found this [advisory](https://github.com/advisories/GHSA-2679-6mx9-h9xc). `Marimo` version 0.20.4 affected to a critical RCE vulnerability, which is CVE-2026-39987.
+Search for the version on Google and found this [advisory](https://github.com/advisories/GHSA-2679-6mx9-h9xc). `Marimo` 0.20.4 is affected by a critical RCE vulnerability, tracked as **CVE-2026-39987**.
 
 ## Summary of CVE-2026-39987
 
@@ -255,7 +255,7 @@ stty raw -echo;fg
 ENTER twice
 ```
 
-Because we do not know `marimo` password, we can not use `sudo -l` to check the privileges. I have try some common ways like finding SUID binaries, checking capabilities, checking cron jobs, etc but none of them works. I decide to use `linpeas` - a script for automatic local enumeration on Linux systems, you can download it from [here](https://github.com/peass-ng/PEASS-ng/releases/download/20261002-82d9fad1/linpeas.sh).
+I have tried some common ways like finding SUID binaries, checking capabilities, checking cron jobs, `sudo -l`, etc but none of them works. I decide to use `linpeas` - a script for automatic local enumeration on Linux systems, you can download it from [here](https://github.com/peass-ng/PEASS-ng/releases/download/20261002-82d9fad1/linpeas.sh).
 
 Download `linpeas.sh` to our local machine and host a temporary webserver:
 
@@ -280,7 +280,7 @@ LinPEAS identified that the machine was vulnerable to **Pack2TheRoot**, a privil
 
 CVE-2026-41651 is a local privilege escalation vulnerability in **PackageKit** caused by a TOCTOU race condition in transaction flag handling. **PackageKit** runs as a root-level D-Bus service and relies on polkit to authorize package installation. However, `InstallFiles()` can overwrite cached_transaction_flags even after a transaction has started.
 
-An attacker can exploit this race by first submitting a safe transaction with ONLY_DOWNLOAD, then quickly sending another request that changes the flags to 0 while the authorization check is being held. When the transaction is later executed, PackageKit reads the modified flags and performs a real package installation instead of the originally authorized safe operation. This allows an unprivileged local user to install a malicious RPM and execute its `%post` scriptlet as root.
+The vulnerability occurs because **PackageKit** does not properly prevent `InstallFiles()` from modifying transaction data after the transaction has already progressed. By changing the transaction flags after authorization, an unprivileged user can cause **PackageKit** to execute a package installation with root privileges. This allows an unprivileged local user to install a malicious package as root and execute its package installation script with root privileges.
 
 **Attack Chain**:
 
@@ -319,8 +319,30 @@ chmod +x cve-2026-41651
 ./cve-2026-41651
 ```
 
-Now we have successfullt privilege escalation and gained root shell:
+Now we have successfully "privilege escalation" and gained root shell:
 ![root-shell](./pics/rootshell.png)
 
 FINAL MISSION: get the root flag
 ![root-flag](./pics/root-flag.png)
+
+---
+
+## OVERALL ATTACK CHAIN
+
+```text
+External Attacker
+      ↓
+SSRF
+      ↓
+Internal Marimo Service
+      ↓
+CVE-2026-39987
+      ↓
+RCE as marimo
+      ↓
+CVE-2026-41651
+      ↓
+PackageKit LPE
+      ↓
+root
+```
