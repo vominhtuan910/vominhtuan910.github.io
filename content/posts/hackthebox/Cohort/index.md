@@ -2,7 +2,7 @@
 date: "2026-09-15T11:31:58+07:00"
 draft: false
 title: "HackTheBox - Cohort walkthrough"
-tags: ["HackTheBox", "Marimo", "Privilege Escalation", "Linux", "SSRF"]
+tags: ["HackTheBox", "Marimo", "Privilege Escalation", "Linux", "SSRF", "PackageKit", "TOCTOU"]
 summary: "Walkthrough for Cohort machine on HackTheBox"
 ---
 
@@ -13,7 +13,9 @@ summary: "Walkthrough for Cohort machine on HackTheBox"
 - **OS:** Linux
 - **Difficulty:** Easy
 - **XP Reward:** 585
-- **Key Vulnerability:** TOCTOU Race condition vulnerability leads to local privilege escalation in `PackageKit`(CVE-2026-41651).
+- **Key Vulnerability:**
+  - **CVE-2026-39987**: Pre-authentication RCE vulnerability in `Marimo`.
+  - **CVE-2026-41651**: TOCTOU Race condition vulnerability leads to local privilege escalation in `PackageKit`.
 
 ---
 
