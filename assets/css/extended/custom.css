@@ -11,7 +11,99 @@
     /* Đổ bóng tách nền tối */
 }
 
+.profile-bio {
+    max-width: 560px;
+    margin: 0.8rem auto 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--content);
+    opacity: 0.92;
+}
+
 :root {
     --main-width: 800px;
     /* Mặc định là 720px */
+}
+
+/* Tùy chỉnh icon mạng xã hội có vòng tròn */
+.social-icons a {
+    border: 2px solid var(--primary);
+    /* Tạo viền tròn với màu text mặc định */
+    border-radius: 50%;
+    /* Bo tròn 100% để tạo thành hình tròn */
+    width: 44px;
+    /* Cố định chiều rộng (có thể tăng giảm tùy ý) */
+    height: 44px;
+    /* Cố định chiều cao bằng chiều rộng */
+    padding: 8px;
+    /* Khoảng cách từ icon đến viền */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    /* Hiệu ứng chuyển động mượt mà */
+    margin: 0 8px;
+    /* Khoảng cách giữa các icon */
+    position: relative;
+    /* Đặt vị trí vào bên gốc */
+}
+
+/* Hiệu ứng khi rê chuột (Hover) vào icon */
+.social-icons a:hover {
+    background-color: var(--primary);
+    /* Đổ màu nền */
+    color: var(--theme);
+    /* Đổi màu icon lật ngược lại */
+    transform: translateY(-3px);
+    /* Hơi nảy lên trên một chút */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Thêm bóng đổ nhẹ */
+}
+
+.cert-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Ép buộc luôn chỉ có 1 cột duy nhất */
+    gap: 3rem;
+    /* Tăng khoảng cách giữa 2 chứng chỉ trên dưới cho thoáng */
+    margin: 1.5rem auto 2.5rem;
+    /* Dùng 'auto' để căn giữa danh sách */
+    max-width: 700px;
+    /* Giới hạn độ rộng tối đa để chứng chỉ hiển thị to vừa phải, dễ đọc */
+}
+
+.cert-card {
+    margin: 0;
+    text-align: center;
+}
+
+.cert-card a {
+    display: block;
+}
+
+.cert-card img {
+    width: 100%;
+    height: auto;
+    /* No forced aspect-ratio/cropping: certificates keep their real shape
+       and stay legible instead of being squeezed into a fixed box. */
+    object-fit: contain;
+    background: #fff;
+    padding: 6px;
+    border: 1px solid #3b3d42;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: zoom-in;
+}
+
+.cert-card a:hover img {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+.cert-card figcaption {
+    margin-top: 0.7rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--content);
 }

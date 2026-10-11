@@ -6,6 +6,12 @@ languages:
 title: "SecNotes | twthunter"
 theme: "PaperMod"
 
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+      # Allow raw HTML and unsafe links in markdown content
+
 params:
   env: "production"
   title: "SecNotes"
@@ -13,7 +19,7 @@ params:
   author: "twthunter"
 
   defaultTheme: "dark" # Giao diện mặc định: dark hoặc auto
-  ShowReadingTime: true
+  ShowReadingTime: false
   ShowShareButtons: false
   ShowCodeCopyButtons: true # Nút copy code snippet cực tiện
 
@@ -23,22 +29,41 @@ params:
     favicon32x32: "favicon-32x32.png"
     apple_touch_icon: "apple-touch-icon.png"
 
-  homeInfoParams:
-    Title: "Hi, I'm a cybersecurity student 👋"
-    Content: "I'm interested in penetration testing, vulnerability research, and offensive security. This blog contains my CTF write-ups, CVE analysis, exploitation techniques, and security research."
+  # Carrd-style hero on the homepage. Replaces the old homeInfoParams block;
+  # drop a square photo at assets/images/avatar.jpg and uncomment imageUrl
+  # below once you have one.
+  profileMode:
+    enabled: true
+    title: "Vo Minh Tuan"
+    subtitle: 'Offensive Security · Vulnerability Research · CTF Player <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f1fb-1f1f3.svg" style="width: 1.15em; vertical-align: -0.15em; display: inline-block; border-radius: 2px;" alt="VN">'
+    imageUrl: "avatar.jpg"
+    imageWidth: 150
+    imageHeight: 150
+    bio: "Breaking things, dissecting CVEs, and documenting the exploit paths."
 
   socialIcons:
     - name: "github"
       url: "https://github.com/vominhtuan910"
     - name: "linkedin"
       url: "https://linkedin.com/in/vominhtuan910"
+    - name: "email"
+      url: "mailto:vominhtuan102003@gmail.com"
 
 menu:
   main:
+    - identifier: About
+      name: About
+      url: /
+      weight: 1
+
     - identifier: posts
       name: Posts
       url: /posts/
       weight: 10
+    - identifier: certifications
+      name: Certifications
+      url: /certifications/
+      weight: 15
     - identifier: tags
       name: Tags
       url: /tags/

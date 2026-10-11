@@ -1,0 +1,10 @@
+<div class="cert-grid">
+  {{- range .Page.Params.certs }}
+  <figure class="cert-card">
+    {{- if .link }}<a href="{{ .link }}" target="_blank" rel="noopener noreferrer">{{ end -}}
+    <img src="{{ .image | relURL }}" alt="{{ .name }}" loading="lazy">
+    {{- if .link }}</a>{{ end }}
+    <figcaption>{{ .name }}</figcaption>
+  </figure>
+  {{- end }}
+</div>
